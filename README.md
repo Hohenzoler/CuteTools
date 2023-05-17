@@ -1,5 +1,5 @@
 # CuteTools
-Cute tools I created using python :3
+Cute tools I created using python :3 I'm planning on combining all tools in this repo into a all in one file sort of thing.
 
 # Known bugs
 1. N.D.S. printing just a couple of connected devices.

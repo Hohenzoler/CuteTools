@@ -1,4 +1,4 @@
-#Network Device Scanner or N.D.S.
+#Network Device Scanner or NDS
 import scapy.all as scapy
 import re
 import time

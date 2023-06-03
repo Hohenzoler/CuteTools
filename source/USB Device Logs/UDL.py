@@ -54,29 +54,44 @@ def detect_new_drive():
     wmi = win32com.client.GetObject("winmgmts:")
     drives = wmi.InstancesOf("Win32_DiskDrive")
     initial_drive_count = len(drives)
+    initial_drive_models = [drive.Model for drive in drives]
+    initial_drive_info = {drive.Model: drive for drive in drives}
 
     while True:
         drives = wmi.InstancesOf("Win32_DiskDrive")
         current_drive_count = len(drives)
+        current_drive_models = [drive.Model for drive in drives]
 
         if current_drive_count > initial_drive_count:
             new_drive = [drive for drive in drives if drive.Index == current_drive_count - 1][0]
             print("New drive detected!")
             print("Drive model:", new_drive.Model)
-            print("Drive capacity: ", round(int(new_drive.Size) / (1024**3), 2), "GB")
+            print("Drive capacity:", round(int(new_drive.Size) / (1024**3), 2), "GB")
             print("Drive interface type:", new_drive.InterfaceType)
             print("Drive serial number:", new_drive.SerialNumber)
 
-            log(new_drive, drives)
-
-
-
             initial_drive_count = current_drive_count
+            initial_drive_models = current_drive_models
+            initial_drive_info[new_drive.Model] = new_drive
 
         elif current_drive_count < initial_drive_count:
             print("Drive unplugged!")
-            initial_drive_count = current_drive_count
 
+            # Find the unplugged drive(s) and print their information
+            unplugged_drives = [model for model in initial_drive_models if model not in current_drive_models]
+            for unplugged_drive in unplugged_drives:
+                print("Drive model:", unplugged_drive)
+                drive_info = initial_drive_info[unplugged_drive]
+                print("Drive capacity:", round(int(drive_info.Size) / (1024**3), 2), "GB")
+                print("Drive interface type:", drive_info.InterfaceType)
+                print("Drive serial number:", drive_info.SerialNumber)
+                print("------------------------")
+
+            initial_drive_count = current_drive_count
+            initial_drive_models = current_drive_models
+
+            # Update the initial drive information dictionary
+            initial_drive_info = {drive.Model: drive for drive in drives}
 
 def detect_all_drives():
     wmi = win32com.client.GetObject("winmgmts:")
@@ -97,5 +112,4 @@ def detect_all_drives():
 
 detect_all_drives()
 detect_new_drive()
-
 

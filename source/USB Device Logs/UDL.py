@@ -1,7 +1,24 @@
-#USB Device Logs or UDL
+#Drive Logger or DL
 import os
 from datetime import datetime
 import win32com.client
+
+def startup():
+    detect_all_drives()
+    wmi = win32com.client.GetObject("winmgmts:")
+    drives = wmi.InstancesOf("Win32_DiskDrive")
+    initial_drive_count = len(drives)
+    path = os.path.join(os.getcwd(), 'logs')
+
+    if not os.path.exists(path):
+        os.mkdir(path)
+
+    file = os.path.join(path, 'General_logs.txt')
+
+    for drive in drives:
+        with open(file, 'a') as f:
+            f.write(f'[{datetime.today().strftime("%Y-%m-%d %H-%M-%S")}]: {drive.Model} ({round(int(drive.Size) / (1024 ** 3), 2)} GB) was detected!\n')
+
 
 def log(drive, drives, First, unplugged):
     drive_count = len(drives)
@@ -148,6 +165,6 @@ def detect_all_drives():
 
 
 
-detect_all_drives()
+startup()
 detect_new_drive()
 

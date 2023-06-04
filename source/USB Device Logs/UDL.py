@@ -2,6 +2,13 @@
 import os
 from datetime import datetime
 import win32com.client
+import pyshortcuts
+
+
+
+
+
+
 
 def startup():
     detect_all_drives()

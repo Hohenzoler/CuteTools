@@ -2,7 +2,7 @@
 import os
 from datetime import datetime
 import win32com.client
-import pyshortcuts
+# import pyshortcuts
 
 
 

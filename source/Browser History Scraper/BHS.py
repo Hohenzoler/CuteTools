@@ -72,6 +72,8 @@ def save_history_to_file(history_rows, browser_name):
     file_path = os.path.join(file_path, f"{browser_name.lower()}")
     file_path = os.path.join(file_path, f"{datetime.today().strftime('%Y-%m-%d %H-%M-%S')}.txt")
     with open(file_path, "w", encoding="utf-8", errors="ignore") as file:
+        history_rows = sorted(history_rows, key=lambda x: x[3])
+
         for row in history_rows:
             url = row[0]
             title = row[1]
